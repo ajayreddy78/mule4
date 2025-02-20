@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7d0cd43d-af0e-4941-a463-af63e7453210" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<flow name="mule4Flow" doc:id="3e7a1ee2-8f4a-4c1d-b787-77854d8e1cd0" >
+		<http:listener doc:name="Listener" doc:id="a3424bec-3c5a-49f8-91ac-301b6058d52a" config-ref="HTTP_Listener_config" path="/api"/>
+		<logger level="INFO" doc:name="Logger" doc:id="46663234-8059-4b3d-8de7-ed832ba145a1" message="==== message ====="/>
+		<ee:transform doc:name="Transform Message" doc:id="92591f43-d53a-4554-b368-9972b01c19d6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": Mule::p("http.port")
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="0cae4599-e9eb-459b-adcd-3fa74625f31f" name="mule4Sub_Flow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="4ce01b45-e4d0-4db0-82b2-60c5b7bef890" message='#["testtttttttttttttttt" ++  vars.te as String]'/>
+		<ee:transform doc:name="Transform Message" doc:id="129df21e-e01b-4ff5-bd2c-427f8a201d24" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	status: vars.te
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<sub-flow name="mule4Sub_Flow" doc:id="05fbb645-7af4-4291-9c1a-70c8cb4f2251" >
+		<logger level="INFO" doc:name="Logger" doc:id="2c983dd6-fbcd-4c2f-bf35-548909722ba2" message="sub flow log"/>
+		<set-variable value="10" doc:name="Set Variable" doc:id="dca5d976-9459-497d-8e85-5290732aa65b" variableName="te"/>
+	</sub-flow>
+</mule>
