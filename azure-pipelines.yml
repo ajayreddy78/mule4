@@ -3,6 +3,11 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
 trigger:
   branches:
     include:
@@ -18,6 +23,7 @@ variables:
   deployment.workers: '1'
   deployment.workerType: 'MICRO'
   http.port: '8081'
+  group: cloudhub
 
 steps:
 - task: Maven@3
